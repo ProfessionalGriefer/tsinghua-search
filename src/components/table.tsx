@@ -98,8 +98,9 @@ export function DataTable<TData, TValue>({
           value={globalFilter ?? ''}
           onChange={value => setGlobalFilter(String(value))}
           placeholder="Search for courses..."
-          className="max-w-sm"
+          className="max-w-sm mr-4"
         />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
