@@ -8,7 +8,7 @@ import { DataTable } from "@/components/table"
 import Header from '@/components/header';
 
 export default function Home() {
-  const { data } = useQuery({ queryKey: ["query"], queryFn: () => queryData(), refetchOnWindowFocus: false });
+  const { data } = useQuery({ queryKey: ["query"], queryFn: () => fetch("/output.json").then(res => res.json()), refetchOnWindowFocus: false });
   // let output;
   // if (data) {
   //   const fuse = createFuse(data);

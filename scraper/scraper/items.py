@@ -22,3 +22,5 @@ class CourseItem(Item):
     link = Field()
     description_en = Field()
     description_cn = Field()
+
+    id = Field()

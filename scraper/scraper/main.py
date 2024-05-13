@@ -19,7 +19,7 @@ def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
 
-@app.get("/example")
+@app.get("/courses")
 def crawl():
     jsessionid = "abc4fx4GXWXMZgJGIuR9y"
     return json.loads(
@@ -27,7 +27,7 @@ def crawl():
             [
                 "scrapy",
                 "crawl",
-                "example",
+                "courses",
                 "--nolog",
                 "-o",
                 "-:json",

@@ -6,32 +6,10 @@ import re
 import json
 
 
-def query(n):
-    return {
-        "m": "jxsKkxxSearch",
-        "page": n,
-        # "token": "4440b78c4bd4fcd04b3c6c62eda0d563",
-        "p_sort.p1": "",
-        "p_sort.p2": "",
-        "p_sort.asc1": "",
-        "p_sort.asc2": "",
-        "xs": "",
-        "p_xnxq": "2023-2024-2",
-        "showtitle": 0,
-        "p_kkdwnm": "",
-        "p_xm": "",
-        "p_skxq": "",
-        "p_kch": "",
-        "p_kcm": "",
-        "p_skjc": "",
-        # "goPageNumber": 3,
-    }
+class DescriptionSpider(scrapy.Spider):
+    name = "descriptions"
 
-
-class ExampleSpider(scrapy.Spider):
-    name = "example"
-
-    url = "https://zhjwe.cic.tsinghua.edu.cn/xkJxs.vxkJxsJxjhBs.do"
+    url = "https://zhjwe.cic.tsinghua.edu.cn/"
     start_urls = []
 
     def __init__(self, jsessionid="abc4fx4GXWXMZgJGIuR9y"):
@@ -66,13 +44,19 @@ class ExampleSpider(scrapy.Spider):
         )
 
     def start_requests(self):
-        for i in range(1, 65):
-            body = urlencode(query(i))
-            yield self.request(self.url, self.parse_item, body)
+        with open("links.txt", "r") as f:
+            lines = f.readlines()
+            for i, line in enumerate(lines):
+                self.start_urls.append(self.url + line)
+
+        for url in self.start_urls:
+            body = None
+            yield self.request(url, self.parse_item, body)
 
     def parse_item(self, response, **_):
         output = re.findall(r"var gridData.+?\];", response.text, re.S)
-        data = re.sub(r"(var gridData = |;)", "", output[0])
+        data = re.sub(r"var gridData =", "", output[0])
+        data = re.sub(r"\];", r"\]", output[0])
         data = re.sub(re.compile(r"(/\*.*?\*/)", re.DOTALL), "", data)
         with open("output.json", "w") as f:
             f.write(data)
