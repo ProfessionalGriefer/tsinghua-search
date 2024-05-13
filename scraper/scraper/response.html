@@ -1,0 +1,1249 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<!--<!DOCTYPE HTML>-->
+<head>
+
+<meta http-equiv="X-UA-Compatible" content="IE=5" />
+
+
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<meta http-equiv="Expires" CONTENT="0">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link type="text/css" href="styles/gbp/theme/blue/menu.css" rel="stylesheet">
+<link type="text/css" href="styles/gbp/datepicker.css" rel="StyleSheet"/>
+<link type="text/css" href="styles/zhjw/grid.css" rel="stylesheet">
+<link type="text/css" href="styles/zhjw/css.css" rel="stylesheet">
+<link type="text/css" href="styles/zhjw/default.css" rel="stylesheet">
+<link type="text/css" href="styles/zhjw/common.css" rel="stylesheet">
+<link type="text/css" href="styles/zhjw/topmenu.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/components/jquery-easyui-1.3.4/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="/components/jquery-easyui-1.3.4/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../demo.css">
+<script type="text/javascript" src="/components/jquery-easyui/jquery.min.js"></script>
+<script type="text/javascript" src="/components/jquery-easyui-1.3.4/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/components/jquery-easyui-1.3.4/jquery.validatebox.fixed.js"></script>
+<script type="text/javascript" src="/components/jquery-easyui-1.3.4/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
+<script type="text/javascript" src="/components/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="scripts/grid.js"></script>
+<script type="text/javascript" src="scripts/prototype.js"></script>
+<script type="text/javascript" src="scripts/gbp/page.js"></script>
+<script type="text/javascript" src="scripts/gbp/selectlist.js"></script>
+<script type="text/javascript" src="scripts/gbp/validation.js"></script>
+<script type="text/javascript" src="scripts/gbp/datepicker.js"></script>
+<script type="text/javascript" src="scripts/gbp/menu.js"></script>
+<script type="text/javascript" src="scripts/validator.jsp"></script>
+<script type="text/javascript" src="scripts/zhjw/pubFunction.js"></script>
+<!-- <script type="text/javascript" src="/components/jquery-easyui-1.3.4/jquery.MultiFile.js"></script> -->
+<script type="text/javascript" src="/components/jquery-easyui-1.3.4/ajaxfileupload.js"></script>
+
+
+<style type="text/css">
+	.text_alert {color: gray;}
+	.table1{background:#000000;}
+	/* 这边定义了表格的背景，也就是边框的颜色 */
+	.table1 td {background:#FFFFFF} 
+	.table1 th {background:#FFFFFF; border-right-style:none; border-left-style: none;  border-top-style: none;}
+	/* 这边定义了表格内的单元格背景是白色啦，就细线就这样出现啦 */
+</style>
+
+</head>
+
+<body class="infoBody">
+
+
+
+
+<div id="isShow"><div class="dqwz" id="pathTd"></div></div>
+<div class="window_side" id="pathTd">
+  	<div class="window_title_yuan" id="window_title">
+    	<div id="SubComtent" class="window_title_left" ><span class="title_label"></span></div>
+    	<div class="window_titleleft_yuan">&nbsp;</div>
+  	</div>
+	<div class="window_neirong"  id="">
+<script>
+function initTopLocal(){
+   //initTop("image","images/zhjw/text.png","本科生选课系统");
+   //initTop("text","","本科生选课系统");
+   //initTopPart("text","本科生选课系统");
+
+
+   isShowPath(false);
+var o1=$("pathTd");
+if(o1!=null) o1.style.display="none";
+var o2=$("window_title");
+if(o2!=null) o2.style.display="none";   
+
+   
+}
+</script>
+
+<script>
+
+	window.document.title = "Query courses open this semester"	//本学期开课信息查询
+
+	function addNew(){ //新增
+	  var frm = window.document.frm;
+	  if(confirmSubmited(frm)){
+	    frm.m.value="add";
+	    frm.submit();
+	  }
+	}
+	
+	function doEdit(){ //修改
+		var frm = window.document.frm;
+	  	if(getCheckedCount(frm.p_id) == 0){
+	  		alert('Please select a record');
+	  	}	//请选择一条记录
+	  	if(getCheckedCount(frm.p_id) > 1){
+	    	alert('You can only modify one record at a time');	//每次只能修改一条记录
+	  	}else if(getCheckedCount(frm.p_id) == 1){ 
+	    	if(confirmSubmited(frm)){
+	    	 frm.m.value = "edit";
+	     	 frm.submit(); 
+	   	 	}
+		 }
+	}
+	
+	function doDel(){
+	  var frm = window.document.frm;
+	  if(getCheckedCount(frm.p_id) == 0){
+	  	alert('Please select a record');	//请选择一条记录
+	  }
+	  if(getCheckedCount(frm.p_id) > 0){ //删除
+	    if(confirm('<fme:message key="jsp.xkJxs.vxkjxsjxjhbs.jxsKxkc.sfcsxdjl"/>')){	//"您是否要删除所有选定的记录？"
+	        if(confirmSubmited(frm)){
+	          frm.m.value = "delete";
+	          frm.submit(); 
+	        }  
+	    }
+	  }
+	}
+	
+	function turn(p){//翻页函数
+	  document.frm.page.value = p;
+	  if(confirmSubmited(document.frm)){
+	    document.frm.submit();
+	  }
+	}
+	
+	function doQuery(methodName){//重新查询
+	  var frm = window.document.frm;
+	  if(confirmSubmited(document.frm)){
+	    document.frm.page.value = "-1";
+	    document.frm.m.value = (methodName ? methodName : "");
+	    document.frm.submit();
+	  } 
+	}
+	
+	function doExport(methodName){//数据导出
+	  document.frm.page.value = "-1";
+	  document.frm.m.value = methodName;
+	  document.frm.target = "_new";
+	  document.frm.submit();
+	  document.frm.target = "_self";
+	}
+	
+	function doSort(index,methodName){//动态排序
+	  if(sortParams[index]){
+	    if(document.frm["p_sort.p1"].value == sortParams[index]){
+	      document.frm["p_sort.asc1"].value = (document.frm["p_sort.asc1"].value=="true" ? "false" : "true");
+	    }else{
+	      document.frm["p_sort.p2"].value = document.frm["p_sort.p1"].value;
+	      document.frm["p_sort.asc2"].value = document.frm["p_sort.asc1"].value;
+	      document.frm["p_sort.p1"].value = sortParams[index];
+	      document.frm["p_sort.asc1"].value = "true";
+	    }
+	    if(confirmSubmited(document.frm)){
+	      document.frm.m.value = (methodName ? methodName : "");
+	      document.frm.submit();
+	    } 
+	  }
+	}
+	function setInitValue(){
+	   initTopLocal();
+	   initTopPart("text",'Query courses open this semester');	//本学期开课信息查询
+	   with(document.frm){
+	   	p_kkdwnm.value = "";
+		p_skxq.value = "";
+		p_skjc.value="";
+	    //p_sftyk.value = "";
+	    //p_sfejxk.value = "";
+	  }
+	}
+	Event.observe(window, "load", setInitValue, false);
+</script>
+
+<!-- 定义列样式，主要是设置列宽度和对齐 -->
+<style>
+body {
+	overflow: auto
+}
+
+.active-column-0 {
+	width: 0px;
+	text-align: center;
+}
+
+.active-column-1 {
+	width: 160px;
+	text-align: center;
+}
+
+.active-column-2 {
+	width: 80px;
+	text-align: center;
+}
+
+.active-column-3 {
+	width: 50px;
+	text-align: center;
+}
+
+.active-column-4 {
+	width: 50px;
+	text-align: center;
+}
+
+.active-column-5 {
+	width: 100px;
+	text-align: center;
+}
+
+.active-column-6 {
+	text-align: center;
+}
+
+.active-column-7 {
+	width: 160px;
+	text-align: center;
+}
+
+.active-column-8 {
+	text-align: center;
+}
+
+.active-column-9 {
+	text-align: center;
+}
+
+.active-column-10 {
+	text-align: center;
+}
+
+.active-column-11 {
+	text-align: center;
+}
+</style>
+
+<script>
+  <!-- 设置表头数据 -->
+  var gridColumns = [
+    /* "<input class=\"infoDisInput\" type=\"checkbox\" name=\"checkboxAll\" onclick=\"checkAll(document.frm.p_id, this.checked);\">Select all"//全选
+    , */
+    "Course title in English"	//"英文课程名"
+    ,"Course title"	//"课程名"
+    ,"Course number"	//"课程号"
+    ,"Course sequence"	//"课序号"
+	,"Credit"		//"学分"
+    ,"Course department/school/college"	//"开课院系"	
+    ,"Instructor"	//"任课教师"
+    ,"Class time"	//"上课时间"
+    ,"Course features"	//"课程特色"
+    //,"Is the course taught in English?"	//"是否英语授课"
+    //,"Is the course an experiment course?"	//"是否实验选课"
+	//,"Is the course a PE course?"	//"是否体育课"
+    //,"Explanations to course registration limit"	//"限制选课说明"
+    ,"Remarks"	//"选课文字说明"
+    ];
+
+  <!-- 设置排序属性数组数据 -->
+  var sortParams = [
+          ,"kcm"
+          ,"id.kch"
+          ,"id.kxh"
+          ,""
+          ,""
+          ,""
+          ,"sfejxk"
+		  ,""
+          ,"xzxksm"
+          ,"xkwzsm"
+          ,"kkdwmc"
+		  ,""
+    ];
+
+  <!--记录行数的变量-->
+  
+  <!-- paged变量指示分页显示还是不分页显示。grid.jsp里用到 -->
+
+    
+   
+
+  <!--定义数据行,第一列为选择框-->
+  var gridData = [
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@3ed2b790'>"
+          , */
+          "Rural Planning towards Coordinated Urban-Rural Development"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1994990176;00000021' target='_blank'>面向城乡协调的乡村规划</a>"
+          ,"00000021"
+          ,"90"
+		  ,"1"
+          ,"School of Architecture"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1994990176' target='_blank' title='负责教师'>刘健</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2016990088' target='_blank' title='非负责教师'>周政旭</a>"		  		  		  
+          ,"5-3(week 1-8)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@7c116f28'>"
+          , */
+          "Polar Architecture"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1992990038;00000131' target='_blank'>极地建筑</a>"
+          ,"00000131"
+          ,"90"
+		  ,"1"
+          ,"School of Architecture"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1992990038' target='_blank' title='负责教师'>庄惟敏</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2006990043' target='_blank' title='非负责教师'>林波荣</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2008990044' target='_blank' title='非负责教师'>程晓喜</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2005990030' target='_blank' title='非负责教师'>冯鹏</a>"		  		  		  
+          ,"2-2(week 9-16)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@5c98eaba'>"
+          , */
+          "Urban Ergonomics Methodology"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1999990059;00000152' target='_blank'>城市人因工程学方法</a>"
+          ,"00000152"
+          ,"90"
+		  ,"2"
+          ,"School of Architecture"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1999990059' target='_blank' title='负责教师'>张利</a>"		  		  		  
+          ,"2-6(week 1-16)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@3b5a88d4'>"
+          , */
+          "Accessbility and Aging Freindly from the Perspective of Interdisciplinary"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2003990113;00000201' target='_blank'>跨学科视角下的无障碍与适老化</a>"
+          ,"00000201"
+          ,"90"
+		  ,"1"
+          ,"School of Architecture"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2003990113' target='_blank' title='负责教师'>邵磊</a>"		  		  		  
+          ,"1-3(week 9-16)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@34cd34bd'>"
+          , */
+          "Aesthetics of Structure"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1996990012;00030112' target='_blank'>结构美学</a>"
+          ,"00030112"
+          ,"90"
+		  ,"2"
+          ,"Department of Civil Engineering"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1996990012' target='_blank' title='负责教师'>董聪</a>"		  		  		  
+          ,"1-6(week 1-16)"
+          ,""           
+       
+          ,"建议大一、大二学生选。美院、建筑学院的学生勿选"
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@c417f60'>"
+          , */
+          "Modern Civil Engineering Materials and Engineering Applications"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2012990087;00030242' target='_blank'>现代土木工程材料与工程应用</a>"
+          ,"00030242"
+          ,"90"
+		  ,"2"
+          ,"Department of Civil Engineering"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2012990087' target='_blank' title='负责教师'>王强</a>"		  		  		  
+          ,"5-6(week 1-16)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@20117de9'>"
+          , */
+          "Stone Culture and Art"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1985990024;00040262' target='_blank'>石文化和艺术</a>"
+          ,"00040262"
+          ,"90"
+		  ,"2"
+          ,"Department of Hydraulic Engineering"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1985990024' target='_blank' title='负责教师'>温庆博</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2009990064' target='_blank' title='非负责教师'>刘晓丽</a>"		  		  		  
+          ,"4-6(week 1-16)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@5c615c71'>"
+          , */
+          "Industrial Ecology"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1995990312;00050021' target='_blank'>工业生态学</a>"
+          ,"00050021"
+          ,"90"
+		  ,"1"
+          ,"School of Environment"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1995990312' target='_blank' title='负责教师'>陈吕军</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2009990086' target='_blank' title='非负责教师'>田金平</a>"		  		  		  
+          ,"2-6(week 1-8)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@7bfc2e18'>"
+          , */
+          "Introduction to Sustainable Development"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1957990010;00050071' target='_blank'>环境保护与可持续发展</a>"
+          ,"00050071"
+          ,"90"
+		  ,"1"
+          ,"School of Environment"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1957990010' target='_blank' title='负责教师'>钱易</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2006990151' target='_blank' title='非负责教师'>梁鹏</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2000990263' target='_blank' title='非负责教师'>杜鹏飞</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2013990055' target='_blank' title='非负责教师'>李淼</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1989990240' target='_blank' title='非负责教师'>张天柱</a>"		  		  		  
+          ,"2-6(week 1-8)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@6936693f'>"
+          , */
+          "Fundamental Geology"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1997990033;00050083' target='_blank'>基础地质学</a>"
+          ,"00050083"
+          ,"90"
+		  ,"3"
+          ,"School of Environment"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1997990033' target='_blank' title='负责教师'>王洪涛</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2001990110' target='_blank' title='非负责教师'>刘建国</a>"		  		  		  
+          ,"3-6(week 1-16)"
+          ,""           
+       
+          ,"接收辅修学生选课"
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@7337dd0f'>"
+          , */
+          "Biosensor for Quick Detection of Contaminants in Water"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2009990057;00050101' target='_blank'>水中污染物快速检测生物传感器</a>"
+          ,"00050101"
+          ,"0"
+		  ,"1"
+          ,"School of Environment"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2009990057' target='_blank' title='负责教师'>周小红</a>"		  		  		  
+          ,"2-1(week 1-8)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@58923ee1'>"
+          , */
+          "15 Lectures On Eco-civilization"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1957990010;00050222' target='_blank'>生态文明十五讲</a>"
+          ,"00050222"
+          ,"90"
+		  ,"2"
+          ,"School of Environment"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1957990010' target='_blank' title='负责教师'>钱易</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2012990109' target='_blank' title='非负责教师'>梅雪芹</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1995990312' target='_blank' title='非负责教师'>陈吕军</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1990990002' target='_blank' title='非负责教师'>胡山鹰</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1981990023' target='_blank' title='非负责教师'>江亿</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2002990168' target='_blank' title='非负责教师'>刘雪华</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2009990086' target='_blank' title='非负责教师'>田金平</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2006990117' target='_blank' title='非负责教师'>周浩明</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2009990132' target='_blank' title='非负责教师'>周剑</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2001990074' target='_blank' title='非负责教师'>王明远</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1990990182' target='_blank' title='非负责教师'>贺克斌</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1970990633' target='_blank' title='非负责教师'>何建坤</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2011990048' target='_blank' title='非负责教师'>冉锐</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2007990062' target='_blank' title='非负责教师'>曹静</a>"		  		  		  
+          ,"1-3(week 1-16)"
+          ,""           
+       
+          ,"接收辅修学生选课"
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@695e5334'>"
+          , */
+          "Frontier Lectures on Carbon Neutralization and Synergy of Pollution and Carbon Reduction"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=1990990182;00050262' target='_blank'>碳中和与减污降碳前沿讲座</a>"
+          ,"00050262"
+          ,"90"
+		  ,"2"
+          ,"School of Environment"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1990990182' target='_blank' title='负责教师'>贺克斌</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1999990136' target='_blank' title='非负责教师'>李金惠</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2016990047' target='_blank' title='非负责教师'>曾现来</a>"		  		  		  
+          ,"3-6(week 1-16)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@2fa8b0f7'>"
+          , */
+          "Carbon accounting methodologies"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2009990086;00050271' target='_blank'>碳核算方法</a>"
+          ,"00050271"
+          ,"90"
+		  ,"1"
+          ,"School of Environment"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2009990086' target='_blank' title='负责教师'>田金平</a>"		  		  		  
+          ,"1-6(week 1-8)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@6bfa4092'>"
+          , */
+          "Biomaterials Engineering and Devices"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2020990042;00120112' target='_blank'>生物材料工程与器件</a>"
+          ,"00120112"
+          ,"90"
+		  ,"2"
+          ,"Department of Mechanical Engineering"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2020990042' target='_blank' title='负责教师'>熊卓</a>"		  		  		  
+          ,"2-6(week 1-16)"
+          ,""           
+       
+          ,""
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@7aa5689f'>"
+          , */
+          "Robot Cognition and Practice"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2005990051;00120272' target='_blank'>机器人认知与实践</a>"
+          ,"00120272"
+          ,"93"
+		  ,"2"
+          ,"Department of Mechanical Engineering"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2005990051' target='_blank' title='负责教师'>刘辛军</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2011980007' target='_blank' title='非负责教师'>康珊珊</a>"		  		  		  
+          ,"1-6(week 1-16)"
+          ,""           
+       
+          ,"建议修过微积分和线性代数"
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@177dda1'>"
+          , */
+          "Embedded Systems Design And Practice"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2004990024;00130302' target='_blank'>嵌入式系统设计与实践</a>"
+          ,"00130302"
+          ,"0"
+		  ,"2"
+          ,"Department of Precision Instrument"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2004990024' target='_blank' title='负责教师'>周斌</a>"		  		  		  
+          ,"3-1(week 1-16)"
+          ,"Experiment course"           
+       
+          ,"要求掌握C语言基本知识,数字电路设计基础知识"
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@647775c7'>"
+          , */
+          "Product Creation System Engineering"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2013990044;00150092' target='_blank'>产品创造系统工程学</a>"
+          ,"00150092"
+          ,"0"
+		  ,"2"
+          ,"School of Vehicle and Mobility"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2013990044' target='_blank' title='负责教师'>ZHAO FUQUAN</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2017990055' target='_blank' title='非负责教师'>刘宗巍</a>"		  		  		  
+          ,"2-4(week 1,3,5,7,9,11,13,15),2-3(week 1,3,5,7,9,11,13,15)"
+          ,""           
+       
+          ,"以面向产业实践为最大特色,无先修要求,面向全校学生尤其是车辆工程及相关专业的学生开放"
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@5ed58f58'>"
+          , */
+          "From Intelligent Micro Aerial Vehicles to Flying Cars: Design and Practice"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2020990152;00150232' target='_blank'>从智能无人机到飞行汽车：设计与实践</a>"
+          ,"00150232"
+          ,"90"
+		  ,"2"
+          ,"School of Vehicle and Mobility"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2020990152' target='_blank' title='负责教师'>周谷越</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2016990096' target='_blank' title='非负责教师'>钱煜平</a>,<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=1996990323' target='_blank' title='非负责教师'>张扬军</a>"		  		  		  
+          ,"2-6(week 1-16)"
+          ,"Practice course"           
+       
+          ,"具有线性代数、概率论、程序设计等基础知识"
+        ],
+        
+      
+        [
+          /* "<input type='checkbox' name='p_id' value='org.thcic.zhjw.xkJxs.vo.VxkJxsJxjhBsKey@16b60b0c'>"
+          , */
+          "The Way of Thinking"
+          ,"<a class='mainHref' href='js.vjsKcbBs.do?m=showToXs&p_id=2006990123;00160102' target='_blank'>思考的方法</a>"
+          ,"00160102"
+          ,"90"
+		  ,"2"
+          ,"Department of Industrial Engineering"		
+		  		  
+          ,"<a class='mainHref' href='xkJxs.vxkJxsJxjhBs.do?m=showJsDetail&p_jsh=2006990123' target='_blank' title='负责教师'>李乐飞</a>"		  		  		  
+          ,"1-3(week 1-16)"
+          ,""           
+       
+          ,""
+        ]
+        
+      
+    ];
+</script>
+
+<form name="frm" action="xkJxs.vxkJxsJxjhBs.do" style="margin: 0px;"
+	target="_self" method="POST">
+	<input type="hidden" name="m" value="jxsKkxxSearch">
+	<input type="hidden" name="page" value="">
+	<input type="hidden" name="token"
+		value="fba8fb3c08ab7f52cdb70f9d212eb29b">
+	<input type="hidden" name="p_sort.p1" value="">
+	<input type="hidden" name="p_sort.p2" value="">
+	<input type="hidden" name="p_sort.asc1" value="">
+	<input type="hidden" name="p_sort.asc2" value="">
+	<input type="hidden" name="xs" value="">
+	<input type="hidden" name="p_xnxq" value="-3">
+	<input type="hidden" name="showtitle" value="0">
+
+	<table border="0" cellpadding="0" cellspacing="0" width="100%"
+		class="infoTopSearch">
+		<tr>
+			<td style="width: 100%;">
+				<table width="100%" class="copyright_zi_hui_shadow">
+					<tr>
+						<td>
+							Course department/school/college
+						</td>
+						<td>
+							<select name="p_kkdwnm">
+								<option value="">
+									Please select ..
+								</option>
+								<option value="">
+								All departments/schools/colleges	
+								</option>
+								
+									<option value="000">
+										000-School of Architecture
+									</option>
+								
+									<option value="001">
+										001-Department of Urban Planning & Design
+									</option>
+								
+									<option value="002">
+										002-Department of Architecture
+									</option>
+								
+									<option value="003">
+										003-Department of Civil Engineering
+									</option>
+								
+									<option value="004">
+										004-Department of Hydraulic Engineering
+									</option>
+								
+									<option value="005">
+										005-School of Environment
+									</option>
+								
+									<option value="012">
+										012-Department of Mechanical Engineering
+									</option>
+								
+									<option value="013">
+										013-Department of Precision Instrument
+									</option>
+								
+									<option value="014">
+										014-Department of Energy and Power Engineering
+									</option>
+								
+									<option value="015">
+										015-School of Vehicle and Mobility
+									</option>
+								
+									<option value="016">
+										016-Department of Industrial Engineering
+									</option>
+								
+									<option value="022">
+										022-Department of Electrical Engineering
+									</option>
+								
+									<option value="023">
+										023-Department of Electronic Engineering
+									</option>
+								
+									<option value="024">
+										024-Department of Computer Science and Technology
+									</option>
+								
+									<option value="025">
+										025-Department of Automation
+									</option>
+								
+									<option value="026">
+										026-School of Integrated Circuits
+									</option>
+								
+									<option value="031">
+										031-School of Aerospace Engineering
+									</option>
+								
+									<option value="032">
+										032-Department of Engineering Physics
+									</option>
+								
+									<option value="034">
+										034-Department of Chemical Engineering
+									</option>
+								
+									<option value="035">
+										035-School of Materials Science and Engineering
+									</option>
+								
+									<option value="042">
+										042-Department of Mathematical Sciences
+									</option>
+								
+									<option value="043">
+										043-Department of Physics
+									</option>
+								
+									<option value="044">
+										044-Department of Chemistry
+									</option>
+								
+									<option value="045">
+										045-School of Life Sciences
+									</option>
+								
+									<option value="046">
+										046-Department of Earth System Science
+									</option>
+								
+									<option value="047">
+										047-Institute for Interdisciplinary Information Sciences
+									</option>
+								
+									<option value="051">
+										051-School of Economics and Management
+									</option>
+								
+									<option value="059">
+										059-School of Public Policy and Management
+									</option>
+								
+									<option value="060">
+										060-PBC School of Finance
+									</option>
+								
+									<option value="063">
+										063-Department of Chinese Language and Literature
+									</option>
+								
+									<option value="064">
+										064-Department of Foreign Languages and Literatures
+									</option>
+								
+									<option value="066">
+										066-School of Law
+									</option>
+								
+									<option value="067">
+										067-School of Journalism and Communication
+									</option>
+								
+									<option value="068">
+										068-School of Marxism
+									</option>
+								
+									<option value="069">
+										069-School of Humanities
+									</option>
+								
+									<option value="070">
+										070-School of Social Sciences
+									</option>
+								
+									<option value="072">
+										072-Division of Sports Science and physical education
+									</option>
+								
+									<option value="075">
+										075-Library
+									</option>
+								
+									<option value="078">
+										078-Art Center
+									</option>
+								
+									<option value="080">
+										080-Academy of Arts & Design
+									</option>
+								
+									<option value="090">
+										090-School of Civil Engineering
+									</option>
+								
+									<option value="091">
+										091-Department of Construction Management
+									</option>
+								
+									<option value="092">
+										092-Department of Astronomy
+									</option>
+								
+									<option value="096">
+										096-Vanke School of Public Health
+									</option>
+								
+									<option value="097">
+										097-Schwarzman College，Tsinghua University
+									</option>
+								
+									<option value="099">
+										099-Department of Building Science
+									</option>
+								
+									<option value="101">
+										101-Institute of Nuclear and New Energy Technology
+									</option>
+								
+									<option value="103">
+										103-Institute of Education
+									</option>
+								
+									<option value="151">
+										151-Fundamental Industry Training Center of Tsinghua University
+									</option>
+								
+									<option value="155">
+										155-Electrical Engineering and Electronics Experiment Teaching Center
+									</option>
+								
+									<option value="207">
+										207-Student Department of Party Committee
+									</option>
+								
+									<option value="209">
+										209-Military Office of Party Committee 
+									</option>
+								
+									<option value="254">
+										254-Academic Affairs Office
+									</option>
+								
+									<option value="255">
+										255-Graduate School
+									</option>
+								
+									<option value="291">
+										291-Graduate School at Shenzhen, Tsinghua University
+									</option>
+								
+									<option value="305">
+										305-Tsinghua University Hospital
+									</option>
+								
+									<option value="400">
+										400-School of Medicine
+									</option>
+								
+									<option value="402">
+										402-School of Pharmaceutical Sciences
+									</option>
+								
+									<option value="410">
+										410-School of Software
+									</option>
+								
+									<option value="412">
+										412-Institute for Network Sciences and Cyberspace
+									</option>
+								
+									<option value="413">
+										413-Institute for International and Area Studies
+									</option>
+								
+									<option value="415">
+										415- Institute for Aero Engine
+									</option>
+								
+									<option value="420">
+										420-Language Centre of Tsinghua University
+									</option>
+								
+									<option value="470">
+										470-Xinya College
+									</option>
+								
+									<option value="471">
+										471-Zhili College
+									</option>
+								
+									<option value="472">
+										472-Rixin College
+									</option>
+								
+									<option value="473">
+										473-Weiyang College
+									</option>
+								
+									<option value="475">
+										475-Xingjian College
+									</option>
+								
+									<option value="476">
+										476-Qiuzhen College
+									</option>
+								
+									<option value="477">
+										477-Weixian College
+									</option>
+								
+									<option value="478">
+										478-Xiuzhong College
+									</option>
+								
+									<option value="491">
+										491-National Graduate College for Engineers
+									</option>
+								
+									<option value="599">
+										599-Tsinghua Shenzhen International Graduate School
+									</option>
+								
+									<option value="600">
+										600-Tsinghua-UC Berkeley Shenzhen Institute
+									</option>
+								
+									<option value="601">
+										601-Global Innovation eXchange Institute，Tsinghua University
+									</option>
+								
+							</select>
+						</td>
+						<td>
+							Instructor
+						</td>
+						<td>
+							<input name="p_xm" type="text" size="10" class="text"
+								value="">
+						</td>
+						<td>
+							Week
+						</td>
+						<td>
+							<select name="p_skxq">
+								<option value="">
+									Please select the day of week..
+								</option>
+								<option value="1">
+									Monday
+								</option>
+								<option value="2">
+									Tuesday
+								</option>
+								<option value="3">
+									Wednesday
+								</option>
+								<option value="4">
+									Thursday
+								</option>
+								<option value="5">
+									Friday
+								</option>
+								<option value="6">
+									Saturday
+								</option>
+								<option value="7">
+									Sunday
+								</option>
+							</select>
+						</td>
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Course number
+						</td>
+						<td>
+							<input name="p_kch" type="text" size="10" class="text"
+								value="">
+						</td>
+						<td>
+							Course title
+						</td>
+						<td>
+							<input name="p_kcm" type="text" size="10" class="text"
+								value="">
+						</td>
+
+						<td>
+							Period
+						</td>
+						<td>
+							<select name="p_skjc">
+								<option value="">
+									Please select the time slot.
+								</option>
+								<option value="1">
+									1st period
+								</option>
+								<option value="2">
+									2nd period
+								</option>
+								<option value="3">
+									3rd period
+								</option>
+								<option value="4">
+									4st period
+								</option>
+								<option value="5">
+									5rd period
+								</option>
+								<option value="6">
+									6st period
+								</option>
+							</select>
+						</td>
+						<td>
+							<input name="bt" type="button" class="zhjwButton" value='Search'
+								onclick="doQuery('jxsKkxxSearch');">
+						</td>
+					</tr>
+					<tr>
+
+						
+					</tr>
+				</table>
+			</td>
+			<!--查询区域 结束-->
+			<td class="infoTopFunctionTD">
+				&nbsp;&nbsp;
+			</td>
+		</tr>
+	</table>
+	<!-- 列表显示所需要的通用文件 -->
+	
+	<style>
+.active-controls-grid {font: menu;}
+.active-templates-header {
+	text-align:center;
+	FONT-SIZE: 9pt;
+	font-family: "宋体", "新宋体", "黑体";
+	color: #442350;
+	line-height: 18px;
+	font-weight: bold;}
+.active-grid-column {border-right: 1px solid #E9CBF3;
+	font-family: "宋体", "新宋体", "黑体";
+	font-size: 9pt;
+	font-weight: normal;
+	color: #442350;
+	line-height: 18px;}
+.active-grid-row {border-bottom: 1px solid #E9CBF3;}
+</style>
+
+<!-- 显示表格 -->
+<script type="text/javascript">
+
+var mydatagridColumn = [[]];
+
+var w;
+for(mydata_i=0;mydata_i < gridColumns.length;mydata_i++){
+	w = ["250","200","80","60","50","100","120","80","200","250"];
+	mydatagridColumn[0][mydata_i] = {field:'title' + mydata_i,title:'' + gridColumns[mydata_i],width:w[mydata_i],align:'center'};
+	
+
+}
+var mydatagridRows_zhjwV2 = [];
+for(mydata_j=0;mydata_j < gridData.length;mydata_j++){
+	var myMap = {};    //对象
+	for(mydata_i=0;mydata_i < gridColumns.length;mydata_i++){
+	myMap['title' + mydata_i] = gridData[mydata_j][mydata_i];
+
+	}	
+	mydatagridRows_zhjwV2[mydata_j] = myMap;
+
+}
+
+
+
+	
+jQuery(document).ready(function() {
+
+
+jQuery('#mydatagrid2').datagrid({
+		width:"auto",
+   	heigth:"auto",
+   	fit:true, 
+    columns:mydatagridColumn,
+			idField:'id',
+			sortOrder: 'asc',
+			singleSelect:false,
+			rowStyler:function(rowIndex,rowData){  
+                //任务完成100%， 并且已审核通过，背景色置灰 
+                if(rowIndex%2!=0)
+                return 'background-color:#eeeeee;';  
+            },
+            striped:true
+			
+		
+});
+
+var obj_zhjwV2 = {'total':mydatagridRows_zhjwV2.length,'rows':mydatagridRows_zhjwV2};
+jQuery('#mydatagrid2').datagrid('loadData',obj_zhjwV2);
+
+
+});//页面加载结束
+
+</script>
+
+
+
+<table width="100%" height="550" border="0" cellspacing="1" cellpadding="0" align="center" bgcolor="#FFFFFF" class="table_boder_class">
+
+  <tr valign="top" height="100%">
+		<td bgcolor="#F2F2F2">
+			<table id="mydatagrid2"  data-options="rownumbers:false,singleSelect:true,toolbar:'#tb'"></table>
+		</td>
+	</tr>
+
+	
+<!-- 没有记录时显示给用户提示信息XXXX  -->
+
+</table>
+
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+<!-- 不分页时显示总记录个数 -->
+
+
+<!-- 分页显示时显示分页信息 -->
+
+	<tr>
+		<td>
+			<table width="100%"  border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#E9CBF3">
+				<tr class="zhjwDisBottomTR">
+					
+					
+					
+					<td align="right" style="border-top: #ffffff 1px solid;  filter:progid:DXImageTransform.Microsoft.Gradient(startColorStr='#ffffff', endColorStr='#CDCDCD', gradientType='1')">						
+						
+						<!--
+						???jsp.common.grid_zhjw.di???1???jsp.common.grid_zhjw.ygg???64 ???jsp.common.grid_zhjw.ykhg???1268 ???jsp.common.grid_zhjw.jl??? 
+						-->
+						Page 1  / Total 64 page (Total 1,268 records )
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						
+						
+			    		
+							<a href='javascript:turn(2);'>Next</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			    			<a href='javascript:turn(64);'>Last</a>&nbsp;&nbsp; 
+			    		 
+			    		<input type="text" name="goPageNumber"  class="text" value='1' size="2">&nbsp;
+						<input type="button" id="go" class="button" onclick="document.frm.go.disabled=true;turn(document.frm.goPageNumber.value);" value="GO">&nbsp;&nbsp;&nbsp;&nbsp;
+					</td>
+					
+				</tr>
+			</table>
+		</td>
+	</tr>
+
+</table>
+
+<!-- grid_zhjwV2 -->
+	<script>
+		//覆盖排序动作的设置
+		/* grid.getTemplate("top/item").setEvent("onmousedown", function(){
+		  var i = this.getItemProperty("index");
+			//默认不处理第一列表头
+			if(i==0) return;
+			if(typeof (doSort) == "function") {doSort(i,"jxsKxkcSearch");}
+		  });  */
+	</script>
+</form>
+
+	</div>
+</div>
+
+
+</body>
+</html>
+
